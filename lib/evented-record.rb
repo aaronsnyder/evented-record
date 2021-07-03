@@ -6,44 +6,44 @@ class EventedRecord < ActiveRecord::Base
     self.uuid = SecureRandom.uuid unless uuid.present?
     create_event(__method__)
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def save!(**options, &block)
     self.uuid = SecureRandom.uuid unless uuid.present?
     create_event(__method__)
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def update_attribute(name, value)
     create_event(__method__, { name: value })
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def update_column(name, value)
     create_event(__method__, { name: value })
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def update_columns(attributes)
     create_event(__method__, attributes)
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def delete
     create_event(__method__)
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   def destroy
     create_event(__method__)
 
-    super if allow_ar_mutations?
+    super if ar_mutations_allowed?
   end
 
   private
@@ -70,7 +70,7 @@ class EventedRecord < ActiveRecord::Base
     Rails.logger.info "#{event}"
   end
 
-  def allow_ar_mutations?
+  def ar_mutations_allowed?
     ENV["ALLOW_AR_MUTATIONS"] || true
   end
 end
